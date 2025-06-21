@@ -36,7 +36,7 @@ WHITELIST=(
   95.216.68.12
 )
 
-# Cloudflare IP Ranges (now allowed on all restricted ports)
+# Cloudflare IP Ranges (allowed on all restricted ports)
 CLOUDFLARE_RANGES=(
   173.245.48.0/20
   103.21.244.0/22
@@ -67,6 +67,11 @@ for ip in "${CLOUDFLARE_RANGES[@]}"; do
   for port in 22 12667 9842 3306; do
     iptables -A INPUT -p tcp --dport $port -s $ip -j ACCEPT
   done
+done
+
+echo "[+] Adding explicit DROP for all other TCP traffic on sensitive ports..."
+for port in 22 12667 9842 3306; do
+  iptables -A INPUT -p tcp --dport $port -j DROP
 done
 
 echo "[+] Installing iptables-persistent and saving rules..."

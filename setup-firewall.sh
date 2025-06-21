@@ -13,9 +13,9 @@ echo "[+] Allowing loopback and established connections..."
 iptables -A INPUT -i lo -j ACCEPT
 iptables -A INPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
 
-echo "[+] Allowing public HTTP/HTTPS access..."
-iptables -A INPUT -p tcp --dport 80 -j ACCEPT
-iptables -A INPUT -p tcp --dport 443 -j ACCEPT
+#echo "[+] Allowing public HTTP/HTTPS access..."
+#iptables -A INPUT -p tcp --dport 80 -j ACCEPT
+#iptables -A INPUT -p tcp --dport 443 -j ACCEPT
 
 # IPs allowed for SSH, 12667, 9842, and 3306
 WHITELIST=(
@@ -57,20 +57,20 @@ CLOUDFLARE_RANGES=(
 
 echo "[+] Adding rules for whitelisted IPs..."
 for ip in "${WHITELIST[@]}"; do
-  for port in 22 12667 9842 3306; do
+  for port in 22 12667 9842 3306 80 443; do
     iptables -A INPUT -p tcp --dport $port -s $ip -j ACCEPT
   done
 done
 
 echo "[+] Adding Cloudflare ranges for all allowed ports..."
 for ip in "${CLOUDFLARE_RANGES[@]}"; do
-  for port in 22 12667 9842 3306; do
+  for port in 22 12667 9842 3306 80 443; do
     iptables -A INPUT -p tcp --dport $port -s $ip -j ACCEPT
   done
 done
 
 echo "[+] Adding explicit DROP for all other TCP traffic on sensitive ports..."
-for port in 22 12667 9842 3306; do
+for port in 22 12667 9842 3306 80 443; do
   iptables -A INPUT -p tcp --dport $port -j DROP
 done
 

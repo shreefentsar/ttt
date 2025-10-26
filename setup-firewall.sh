@@ -34,6 +34,8 @@ WHITELIST=(
   167.172.63.104
   127.0.0.1
   95.216.68.12
+  #ip of ivanov
+  77.94.203.57
 )
 
 # Cloudflare IP Ranges (allowed on all restricted ports)

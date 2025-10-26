@@ -36,6 +36,8 @@ WHITELIST=(
   95.216.68.12
   #ip of ivanov
   77.94.203.57
+  #ip of Zabbix Server
+  95.216.10.206
 )
 
 # Cloudflare IP Ranges (allowed on all restricted ports)
@@ -59,14 +61,14 @@ CLOUDFLARE_RANGES=(
 
 echo "[+] Adding rules for whitelisted IPs..."
 for ip in "${WHITELIST[@]}"; do
-  for port in 22 12667 9842 3306 80 443; do
+  for port in 22 12667 9842 3306 80 443 10050 10051; do
     iptables -A INPUT -p tcp --dport $port -s $ip -j ACCEPT
   done
 done
 
 echo "[+] Adding Cloudflare ranges for all allowed ports..."
 for ip in "${CLOUDFLARE_RANGES[@]}"; do
-  for port in 22 12667 9842 3306 80 443; do
+  for port in 22 12667 9842 3306 80 443 10050 10051; do
     iptables -A INPUT -p tcp --dport $port -s $ip -j ACCEPT
   done
 done

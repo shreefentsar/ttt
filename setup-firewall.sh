@@ -20,6 +20,8 @@ iptables -A INPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
 # IPs allowed for SSH, 12667, 9842, and 3306
 WHITELIST=(
   64.226.113.132
+  149.154.160.0/20
+  91.108.4.0/22
 )
 
 # Cloudflare IP Ranges (allowed on all restricted ports)

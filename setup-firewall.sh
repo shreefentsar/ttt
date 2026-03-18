@@ -19,25 +19,7 @@ iptables -A INPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
 
 # IPs allowed for SSH, 12667, 9842, and 3306
 WHITELIST=(
-  35.210.137.169
-  35.210.98.72
-  34.38.42.113
-  95.217.111.212
-  95.217.79.45
-  162.55.1.181
-  49.12.174.55
-  88.99.95.148
-  159.69.142.232
-  88.99.249.122
-  95.216.38.185
-  142.132.143.152
-  167.172.63.104
-  127.0.0.1
-  95.216.68.12
-  #ip of ivanov
-  77.94.203.57
-  #ip of Zabbix Server
-  95.216.10.206
+  64.226.113.132
 )
 
 # Cloudflare IP Ranges (allowed on all restricted ports)
@@ -61,20 +43,20 @@ CLOUDFLARE_RANGES=(
 
 echo "[+] Adding rules for whitelisted IPs..."
 for ip in "${WHITELIST[@]}"; do
-  for port in 22 12667 9842 3306 80 443 10050 10051; do
+  for port in 22 12667 9842 3306 80 443 10050  3390 10051; do
     iptables -A INPUT -p tcp --dport $port -s $ip -j ACCEPT
   done
 done
 
 echo "[+] Adding Cloudflare ranges for all allowed ports..."
 for ip in "${CLOUDFLARE_RANGES[@]}"; do
-  for port in 22 12667 9842 3306 80 443 10050 10051; do
+  for port in 22 12667 9842 3306 80 443 10050 3390 10051; do
     iptables -A INPUT -p tcp --dport $port -s $ip -j ACCEPT
   done
 done
 
 echo "[+] Adding explicit DROP for all other TCP traffic on sensitive ports..."
-for port in 22 12667 9842 3306 80 443; do
+for port in 22 12667 9842 3306 80 3390 443; do
   iptables -A INPUT -p tcp --dport $port -j DROP
 done
 
